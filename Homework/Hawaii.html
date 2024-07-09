@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .navbar {
+            display: flex;
+            position: fixed;
+            width: 100%;
+            height: 50px;
+            padding: 20px;
+            font-size: 40px;
+            background-color: #fff;
+            border-bottom: 2px solid #ccc;
+            z-index: 10;
+        }
+        .navbar img {
+            width: 50px;
+            vertical-align: top;
+        }
+        .navbar .title {
+            position: relative;
+            text-decoration: none;
+            left: 30px;
+            font-size: 45px;
+        }
+        .navbar .tag {
+            display:inline-block;
+            position: relative;
+            color: #f70;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            top: 10px;
+            left: 270px;
+            z-index: 10;
+        }
+        .navbar .logo, .intro{
+            display: none;
+        }
+        .s1 {
+            padding-top: 160px;
+        }
+        section h1 {
+            padding: 20px;
+            font-size: 80px;
+        }
+        section h2 {
+            padding: 20px;
+            font-size: 32px;
+        }
+        section .pic img {
+            width: 100%;
+            margin-top: 40px;
+            vertical-align: top;
+        }
+        section .arrow {
+            font-size: 30px;
+            position: absolute;
+            bottom: 21.5%;
+            left: 70%;;
+        }
+        section .pic-rotate{
+            height: 50px;
+        }
+        section .pic-rotate img{
+            width: 25%;
+            position: relative;
+            bottom: 515px;
+            left: 59%;
+        }
+        section .article {
+            font-size: 26px;
+            padding-left: 30px;
+            padding-bottom: 60px;
+        }
+        .s1-p-area .article-large{
+            display: none;
+        }
+        section .pic-seaturtle {
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+        }
+        .s2 {
+            background-color: #eee;
+        }
+        .s2 .pic-seaturtle img{
+            border-radius: 15px;
+            width: 90%;
+        }
+        .s2 h3 {
+            font-size: 40px;
+            padding-top: 30px;
+            padding-left: 35px;
+        }
+        .s2 .about {
+            font-size: 26px;
+            padding-left: 35px;
+            padding-right: 20px;
+            padding-bottom: 0px;
+            line-height: 2;
+        }
+        .s2 .about-hawaii{
+            text-decoration: none;
+            color: #f70;
+            font-size: 26px;
+            font-weight: bold;
+            padding-left: 35px;
+        }
+        .s2 h2 {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            font-size: 68px;
+        }
+        .s2 .special-txt {
+            color: #f70;
+        }
+        .s2 .separate {
+            display: block;
+            text-align: center;
+            font-size: 22px;
+            padding-bottom: 40px;
+        }
+        .s2 .card-list {
+            display: flex;
+            flex-wrap: nowrap;
+            min-width: 1200px;
+            overflow-x: auto;
+            gap: 20px;
+            padding-left: 20px;
+            padding-bottom: 60px;
+        }
+        .card-1 {
+            background: url(./photo/Hawaii/bg01.jpg);
+        }
+        .card-2 {
+            background: url(./photo/Hawaii/bg02.jpg);
+        }
+        .card-3 {
+            background: url(./photo/Hawaii/bg03.jpg);
+        }
+        .card-1, .card-2 ,.card-3{
+            width: 300px;
+            height: 400px;
+            vertical-align: top;
+            gap: 10px;
+            border-radius: 15px;
+        }
+        .card-1 h4, .card-2 h4,.card-3 h4 {
+            color: #fff;
+            font-size: 20px;
+            padding: 20px 25px 0px 25px;
+        }
+        .card-1 .txt-1, .card-3 .txt-3 {
+            opacity: 0;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.8;
+            padding: 100px 50px 0px 20px;
+        }
+        .card-2 .txt-2 {
+            opacity: 0;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.8;
+            padding: 70px 50px 0px 20px;
+        }
+        .card-1:hover .txt-1{
+            opacity: 1;
+        }
+        .card-2:hover .txt-2{
+            opacity: 1;
+        }
+        .card-3:hover .txt-3{
+            opacity: 1;
+        }
+        .card-1 .span-jp, .card-2 .span-jp,.card-3 .span-jp{
+            display: block;
+            color: #fff;
+            padding-left: 25px;
+            padding-top: 10px;
+            font-size: 12px;
+        }
+        .card-1 .span-en, .card-2 .span-en,.card-3 .span-en{
+            display: block;
+            color: #ccc;
+            font-size: 10px;
+            padding: 5px 25px 0px 25px;
+        }
+        .s2 .card img:hover p{
+            display: block;
+        }
+        .s2 .card-list a {
+            text-decoration: none;
+        }
+        main .title {
+            display: block;
+            font-size: 24px;
+            border-top: 2px solid #000;
+            margin-top: 50px;
+            padding: 10px 10px 60px;
+        }
+        main .sub-title {
+            padding: 10px 10px 60px;
+            position: relative;
+        }
+        main .sub-title span {
+            font-size: 12px;
+            color: #aaa;
+        }
+        main .sub-title a {
+            position: absolute;
+            text-decoration: none;
+            color: #f70;
+            font-weight: bold;
+            left: 80%;
+        }
+        .card-event {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+        }
+        .card-event .pic-large-1,.card-event .pic-small-1 {
+            width: 100%;
+        }
+        .card-event a {
+            text-decoration: none;
+        }
+        .card-travelers-large {
+            grid-column: span 2;
+            /* grid-row: span 2; */
+        }
+        .card-travelers-large:not(.pic-large-1) {
+            padding: 0 20px;
+        }
+        .card-travelers-large h3{
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .card-travelers-large p{
+            font-size: 14px;
+        }
+        .card-travelers-large time{
+            font-size: 12px;
+        }
+        .card-travelers-small {
+            padding: 20px 20px;
+            grid-template-columns: repeat(2,1fr);
+        }
+        .card-travelers-small h3 {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        @media screen and (min-width:768px) {
+            .navbar {
+                width: 100%;
+                
+            }
+            .nav-area {
+                display: flex;
+                width: 100%;
+            }
+            .nav-area img {
+                display: block;
+                width: 24px;
+                padding: 20px;
+                vertical-align: middle;
+            }
+            .nav-area .intro {
+                display: block;
+                font-size: 12px;
+                line-height: 1.0;
+            }
+            .nav-area .title {
+                display: block;
+                margin: 0 auto;
+            }
+            .nav-area .tag {
+                display: none;
+            }
+            .nav-area .logo {
+                display: block;
+                vertical-align: top;
+                margin-left: auto;
+            }
+            .nav-area a {
+                display: flex;
+                justify-content: center;
+            }
+            .left-top-area {
+                display: flex;
+                width: 33.333333%;
+                align-items: center;
+            }
+            .middle-top-area {
+                width: 33.333333%;
+            }
+            .right-top-area {
+                width: 33.333333%;
+            }
+            .s1 {
+            }
+            .s1-title-area {
+                justify-content: center;
+                z-index: 10;
+                display: flex;
+            }
+            .s1-title-area h1 {
+                letter-spacing: -0.05em;
+                order: 2;
+                font-size: 140px;
+            }
+            .s1-title-area h2 {
+                font-size: 24px;
+            }
+            .s1 .pic {
+                width: 70%;
+                
+            }
+            .s1 .pic img{
+                position: relative;
+                margin-top: -80px;
+                border-top-right-radius: 15px;
+                z-index: -1;
+            }
+            .s1 .arrow, .pic-rotate {
+                display: none;
+            }
+            .s1-p-area {
+                display: flex;
+            }
+            .s1 .article {
+                display: none;
+            }
+            .s1-p-area .article-large {
+                display: flex;
+                width: 30%;
+                font-size: 16px;
+                line-height: 2.0;
+                writing-mode: vertical-rl;
+                align-items: center;
+                margin: auto;
+            }
+            .s2-card{
+                width: 80%;
+                display: flex;
+                margin: auto;
+            }
+            .s2-card .pic-seaturtle{
+                
+                min-width: 550px;
+                height: 100%;
+            }
+            .s2-card .pic-seaturtle img {
+                width: 100%;
+                z-index: 9;
+                margin-top: -100px;
+            }
+            .s2-card-textarea{
+                margin-left: 30px;
+            }
+            .s2-card-textarea h3 {
+                font-size: 34px;
+                line-height: 1.4;
+                padding-bottom: 30px;
+            }
+            .s2-card-textarea .about{
+                font-size: 16px;
+                padding-bottom: 30px;
+            }
+            .s2-card-textarea .about-hawaii {
+                font-size: 16px;
+            }
+            .s2 .What-we-can-do-to {
+                width: 100%;
+                margin-left: 130px;
+            }
+            .s2 .What-we-can-do-to h2{
+                line-height: 1.0;
+                letter-spacing: -0.05em;
+            }
+            .s2 .separate {
+                font-size: 10px;
+            }
+            .s2 .card-list {
+                width: 100%;
+                justify-content: center;
+            }
+            .s2 .card-list div {
+                width: 100%;
+                width: 400px;
+                height: 550px;
+            }
+            .card-1 .txt-1, .card-2 .txt-2 {
+                padding: 320px 50px 0px 20px;
+            }
+            .card-3 .txt-3 {
+                padding: 350px 50px 0px 20px;
+            }
+            main .title {
+            display: block;
+            font-size: 24px;
+            border-top: 2px solid #000;
+            margin: 50px;
+            }
+            main .sub-title {
+                display: flex;
+                font-size: 24px;
+                border-top: 2px solid #eee;
+                margin: 50px;
+            }
+            main .sub-title span{
+                color: #666;
+            }
+            main .sub-title a {
+                font-size: 16px;
+            }
+            main .container {
+                width: 100%;
+                display: grid;
+            }
+            main .card-event {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+            }
+            main .card-travelers-large {
+                margin: 20px 0px 0px 20px;
+                grid-column: span 2;
+                grid-row: span 2;
+            }
+            main .card-event .card-travelers-large .pic-large-1 {
+                width: 100%;
+                height: 70%;
+            }
+            main .card-travelers-large .pic-large-1, .pic-small-1{
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <nav class="nav-area">
+            <div class="left-top-area">
+                <a href="#"><img src="./photo/Hawaii/search.svg" alt=""></a>
+                <span class="intro">
+                    ハワイ州<br>
+                    レスポンシブル・ツーリズム<br>
+                    情報サイト
+                </span>
+            </div>
+            <div class="middle-top-area"><a href="#" class="title">Mālama Hawai‘i</a></div>
+            <a href="#" class="tag">マラマハワイとは</a>
+            <div class="right-top-area"><a href="#"><img src="./photo/Hawaii/logo.png" class="logo" alt=""></a></div>
+        </nav>
+    </div>
+    
+    <section class="s1">
+        <div class="s1-title-area">
+            <h1>Re-Imagine<br>Hawai‘i</h1>
+            <h2>ハワイを想うことは、<br>ハワイの未来を創ること。</h2>
+        </div>
+        <div class="s1-p-area">
+            <div class="pic"><img src="https://www.allhawaii.jp/malamahawaii/wp-content/themes/malamahawaii/img/home/main.jpg" alt=""></div>
+            <span class="arrow">↓</span>
+            <div class="pic-rotate"><img src="https://www.allhawaii.jp/malamahawaii/wp-content/themes/malamahawaii/img/home/scroll_more.svg" alt=""></div>
+            <div class="article">
+                <p>美しい楽園ハワイは、
+                    <br>永遠ではありません。
+                    <br>山から海まで、
+                    <br>ハワイに生きる美しい自然や文
+                    <br>化に
+                    <br>「マラマ = 思いやりの心」を持
+                    <br>って接すること。
+                    <br>レスポンシブル・ツーリズムは、
+                    <br>そんな思いやりの心を
+                    <br>旅の中で実践していく、
+                    <br>新しい観光のカタチです。
+                    <br>ハワイが何十年後も、何百年後
+                    <br>も、
+                    <br>素晴らしい楽園であるよう
+                    <br>旅行者のみなさんだから
+                    <br>できることがあります。
+                </p>
+            </div>
+            <div class="article-large">
+                <p>
+                    美しい楽園ハワイは、
+                    永遠ではありません。<br>
+                    山から海まで、
+                    ハワイに生きる美しい自然や文
+                    化に<br>
+                    「マラマ = 思いやりの心」を持
+                    って接すること。<br>
+                    レスポンシブル・ツーリズムは、
+                    そんな思いやりの心を<br>
+                    旅の中で実践していく、
+                    新しい観光のカタチです。<br>
+                    ハワイが何十年後も、何百年後
+                    も、
+                    素晴らしい楽園であるよう<br>
+                    旅行者のみなさんだから
+                    できることがあります。
+                </p>
+            </div>
+        </div>
+    </section>
+    <section class="s2">
+        <div class="s2-card">
+            <div class="pic-seaturtle">
+                <img src="https://www.allhawaii.jp/malamahawaii/wp-content/themes/malamahawaii/img/home/main_turtle.jpg" alt="">
+            </div>
+            <div class="s2-card-textarea">
+                <h3>美しいハワイを<br>未来へとつなぐために<br>わたしたちができること</h3>
+                <p class="about">ハワイは世界の絶滅危惧種の宝庫と呼ばれるほど、貴重な生物がたくさん生息しています。ウミガメ、イルカ、クジラ、サンゴ礁。これらを守るためにも、知ってもらいたいことやルールがあります。これからは旅行者にも、ハワイの島々の自然や文化を守り、現地住民が大切にする場所を敬い、美しいハワイを未来へつなげていく行動が求められます。
+                    「レスポンシブル・ツーリズム」一緒にはじめませんか。</p>
+                <a href="#" class="about-hawaii">マラマハワイとは</a>
+            </div>
+        </div>
+        <div class="What-we-can-do-to">
+            <h2>What We Can Do to<br>
+                <div class="special-txt">Keep Hawai‘i Beautiful</div>
+                for the Future.
+            </h2>
+        </div>
+        <span class="separate">ABOUT MĀLAMA HAWAI‘I</span>
+        <div class="card-list">
+            <div class="card-1">
+                <a href="#">
+                    <h4>責任ある旅行“レスポンシブル・ツーリズム”について</h4>
+                    <span class="span-jp">詳しく見る</span>
+                    <p class="txt-1">観光客もツーリズムを構成する要素であると捉え、観光客が意識や行動に責任を持つことで、より良い観光地形成を行っていこうという考え方です。</p>
+                    <span class="span-en">WHAT IS “RESPONSIBLE TOURISM”</span>
+                </a>
+            </div>
+            <div class="card-2">
+                <a href="#">
+                    <h4>ハワイ独自の取り組み“アロハプラスチャレンジ”について</h4>
+                    <span class="span-jp">詳しく見る</span>
+                    <p class="txt-2"> SDG’sを基準にハワイ州が独自のゴールを設定した特別プログラムです。官民一体となり経済、社会、環境の側面からを持続可能な社会を目指します。</p>
+                    <span class="span-en">ABOUT “ALOHA + CHALLENGE”</span>
+                </a>
+            </div>
+            <div class="card-3">
+                <a href="#">
+                    <h4> ハワイ州観光局からのメッセージ</h4>
+                    <span class="span-jp">詳しく見る</span>
+                    <p class="txt-3">歴史的にも深い関係を持つ日本とハワイが、これからも共に支え合い、高め合う良い関係が継続できるようハワイ州観光局もサポートしていきます。</p>
+                    <span class="span-en">MESSAGE FROM HAWAI‘I TOURISM JAPAN</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <main>
+        <span class="title">LATEST</span>
+        <div class="sub-title">
+            <h3>旅行者にできること</h3>
+            <span>What Travelers Can Do</span>
+            <a href="#">すべて見る</a>
+        </div>
+            
+        <div class="container">
+            <div class="card-event">
+                <div class="card-travelers-large">
+                    <a href="#">
+                        <img src="./photo/Hawaii/icon-1.svg" class="icon-1"  alt="">
+                        <span>イベント</span>
+                        <img src="https://www.allhawaii.jp/malamahawaii/wp-content/uploads/2024/03/Allhawaii%E3%82%B3%E3%83%A9%E3%83%A0%E7%94%A8-3-768x307.png" class="pic-large-1" alt="">
+                        <h3>【4月22日はアースデイ】ハワイでの環境にやさしいイベントを紹介！</h3>
+                        <p>毎年4月22日はアースデイ(Earth Day)！地球や環境のことを考え、一人一人が何ができるかを考えたり行動を起こすために生まれた1日。1970年にユネスコに</p>
+                        <time datetime="2024.03.21">2024.03.21</time>
+                    </a>
+                </div>
+                <div class="card-travelers-small">
+                    <a href="#">
+                        <img src="./photo/Hawaii/icon-1.svg" class="icon-1" alt="">
+                        <span>イベント</span>
+                        <img src="https://www.allhawaii.jp/malamahawaii/wp-content/uploads/2021/04/Prince-Kuhio.jpg" class="pic-small-1" alt="">
+                        <h3>プリンス・クヒオ・デイ・セレブレーション（Prince Kuhio Day Celebration）</h3>
+                        <time datetime="2024/03/21">2024.03.21</time>
+                    </a>
+                </div>
+                <div class="card-travelers-small">
+                    <a href="#">
+                        <img src="./photo/Hawaii/icon-2.svg" class="icon-2" alt="">
+                        <span>海</span>
+                        <img src="https://www.allhawaii.jp/malamahawaii/wp-content/uploads/2023/11/230820_Puerto-Morelos-Limones_LJM07316-1536x1026.jpg" class="pic-small-1" alt="">
+                        <h3>【11月はサンゴ白化啓発月間　〜日常でできること〜</h3>
+                        <time datetime="2023.11.09">2023.11.09</time>
+                    </a>
+                </div>
+                <div class="card-travelers-small">
+                    <a href="#">
+                        <img src="./photo/Hawaii/icon-3.svg" class="icon-3" alt="">
+                        <span>その他</span><br>
+                        <img src="https://www.allhawaii.jp/malamahawaii/wp-content/uploads/2023/08/%E7%B1%B3%E5%9B%BD%E3%83%8F%E3%83%AF%E3%82%A4%E5%B7%9E%E3%83%9E%E3%82%A6%E3%82%A4%E9%83%A1%E3%83%9E%E3%82%A6%E3%82%A4%E5%B3%B6%E3%81%AE%E5%B1%B1%E7%81%AB%E4%BA%8B%E6%95%91%E6%8F%B4%E9%87%91-640-%C3%97-427-px-1.png" class="pic-small-1" alt="">
+                        <h3>マウイ島の山火事救援金、日本円で受付開始</h3>
+                        <time datetime="2023.08.18">2023.08.18</time>
+                    </a>
+                </div>
+                <div class="card-travelers-small">
+                    <a href="#">
+                        <img src="https://www.allhawaii.jp/malamahawaii/wp-content/uploads/2023/07/image.png" class="pic-small-1" alt="">
+                        <h3>2023年7月後半～9月にハワイで開催されるカルチャーイベント</h3>
+                        <time datetime="2023.07.20">2023.07.20</time>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    
+</body>
+</html>
