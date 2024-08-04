@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <!--Bootstrap CDN-->
+    <link 
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"  
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <!--引入 Font Awesome CDN(做circle-info icon)-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!--leaflet CDN (地圖)-->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""
+    />
+    <!--leaflet.markercluster 套件-->
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"
+    />
+    <style>
+        #map { 
+            height: 600px;
+            margin-top: 100px;
+            
+        }
+        .dropdowns{
+          display: flex;
+        }
+        #my_table{
+          width: 780px;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+        <h1 class="mb-5 text-center">Youbike站點地圖串接(台北/新北)</h1>
+        <div class="row">
+            <div class="col-6" id="map-container">
+                <div id="map"></div>
+            </div>
+            <div class="col-6" id="info-container">
+              <div class="h2 text-center">站點資訊</div>
+
+              <div class="dropdowns justify-content-around">
+                <div class="dropdown" id="btn_country_city">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    請選擇縣市
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item taipei" href="#">台北市</a></li>
+                    <li><a class="dropdown-item newtaipei" href="#">新北市</a></li>
+                  </ul>
+                </div>
+                <div class="dropdown" id="btn_area">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    請選擇區域
+                  </button>
+                  <ul class="dropdown-menu" id="area-dropdown-menu">
+                    <li><a class="dropdown-item" href="#">A</a></li>
+                    <li><a class="dropdown-item" href="#">B</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="loading_spinner" class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+                <table 
+                id="my_table" 
+                class="table table-striped mt-3 text-center d-none">
+                    <thead>
+                      <tr>
+                        <th scope="col">區域</th>
+                        <th scope="col">站點名稱</th>
+                        <th scope="col">數量(剩餘/空位/總共)</th>
+                        <th scope="col">地圖</th>
+                        <th scope="col">經緯度</th>
+                      </tr>
+                    </thead>
+                    <tbody class="data_rows">
+                      <!-- <tr>
+                        <td>A</td>
+                        <td>A</td>
+                        <td>A</td>
+                        <td><i class="fa-solid fa-map-location-dot"></i></td>
+                        <td><i class="fa-solid fa-circle-info"></i></td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+            </div>
+        </div>
+    </div>
+    <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+    ></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""
+     ></script>
+     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+     <script>
+        const map = L.map("map");
+        const markers = L.markerClusterGroup();
+        let currentCity = '';
+        let youbikeData = [];
+
+
+        window.onload = function () { 
+            initMap(); //初始化地圖
+            document.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if(item.classList.contains('taipei')){
+                      currentCity = 'taipei'
+                      switchCity(item.classList);
+                    }
+                    else if(item.classList.contains('newtaipei')){
+                      currentCity = 'newtaipei'
+                      switchCity(item.classList);
+                    }
+                });
+            });
+        };
+
+
+        function switchCity(classList) {
+          clearMarkerGroup();
+          clearTable();
+          document.getElementById("loading_spinner").classList.remove("d-none");
+          document.getElementById("map-container").classList.remove("d-none");
+          document.getElementById("info-container").classList.remove("d-none");
+          document.getElementById("my_table").classList.add("d-none");
+
+          switch (true) {
+            case classList.contains('taipei'):
+                  fetchYoubikeData().then((data) => {
+                        youbikeData = data;
+                        data.forEach((station) => {
+                            renderingStationInfo(station);
+                            addMarker(station); 
+                        });
+                        generateAreaDropdown();
+                        document.getElementById("loading_spinner").classList.add("d-none");
+                        document.getElementById("my_table").classList.remove("d-none");
+                    });
+                    break; 
+            case classList.contains('newtaipei'):
+                  fetchYoubikeData2().then((data) => {
+                        youbikeData = data;
+                        data.forEach((station) => {
+                            renderingStationInfo2(station);
+                            addMarker2(station);
+                            
+                        });
+                        generateAreaDropdown();
+                        document.getElementById("loading_spinner").classList.add("d-none");
+                        document.getElementById("my_table").classList.remove("d-none");
+                    });
+                    break; 
+          }
+      }
+
+      function generateAreaDropdown() {
+          const areaDropdownMenu = document.getElementById('area-dropdown-menu');
+          areaDropdownMenu.innerHTML = ''; // 清空現有區域選單
+            
+          const areas = new Set(youbikeData.map(station => station.sarea)); //Set 去除重複資訊
+          areas.forEach(area => {
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.className = 'dropdown-item';
+              a.href = '#';
+              a.textContent = area;
+              li.appendChild(a);
+              areaDropdownMenu.appendChild(li);
+          
+              a.addEventListener('click', () => {
+                  const selectedArea = a.textContent;
+                  filterStationsByArea(selectedArea);
+              });
+          });
+      }
+
+      function filterStationsByArea(area) {
+          clearTable();
+          clearMarkerGroup();
+
+          const filteredData = youbikeData.filter(station => station.sarea === area);
+          filteredData.forEach(station => {
+              if (currentCity === 'taipei') {
+                  renderingStationInfo(station);
+                  addMarker(station);
+              } else if (currentCity === 'newtaipei') {
+                  renderingStationInfo2(station);
+                  addMarker2(station);
+              }
+          });
+      }
+
+
+        function clearMarkerGroup(){
+            if(markers){
+                markers.clearLayers();
+            }
+        }
+        
+        function initMap() {
+            //設定圖資
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: 
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            }).addTo(map);
+            //設定中心位置
+            map.setView([25.0415001, 121.536222], 17);
+            document.getElementById("loading_spinner").classList.add("d-none");
+        }
+
+        function clearTable(){
+            document.querySelector(".data_rows").innerHTML = '';
+        }
+
+        function addMarker(station){
+            const marker = L.marker([station.latitude, station.longitude]); //獲得資訊
+
+            marker.bindPopup(
+              `<p class=h6>${station.sna}</p>剩餘/空位/總共:${station.available_rent_bikes}/${station.available_return_bikes}/${station.total}`
+            );
+
+            markers.addLayer(marker);
+            map.addLayer(markers);
+        }
+
+        function addMarker2(station){
+            const marker = L.marker([station.lat, station.lng]); //獲得資訊
+
+            marker.bindPopup(
+              `<p class=h6>${station.sna}</p>剩餘/空位/總共:${station.sbi}/${station.bemp}/${station.tot}`
+            );
+
+            markers.addLayer(marker);
+            map.addLayer(markers);
+        }
+
+        function renderingStationInfo(station){
+                const tr = document.createElement("tr");
+                const sareaTd = document.createElement("td");
+                sareaTd.textContent = `${station.sarea}`
+                const stationNameTd = document.createElement("td");
+                stationNameTd.textContent = `${station.sna}`;
+                const infoTd = document.createElement("td"); 
+                infoTd.textContent = `${station.available_rent_bikes}/${station.available_return_bikes}/${station.total}`;
+                const mapTd = document.createElement("td");
+                const mapIcon = document.createElement("i");
+
+                mapIcon.classList.add("fa-solid", "fa-map-location-dot");
+                mapIcon.addEventListener("click", () => {
+                    map.flyTo([station.latitude, station.longitude], 18);
+                });
+                mapTd.append(mapIcon);
+
+                const latLngTd = document.createElement("td");
+                const latLngIcon = document.createElement ("i");
+                latLngIcon.classList.add("fa-solid","fa-circle-info");
+                latLngIcon.setAttribute("data-bs-toggle","tooltip");
+                latLngIcon.setAttribute("data-bs-title",`${station.latitude},${station.longitude}`) ;
+                new bootstrap.Tooltip(latLngIcon);
+                latLngTd.append(latLngIcon);
+
+                tr.append(sareaTd, stationNameTd, infoTd, mapTd, latLngTd);
+                document.querySelector(".data_rows").append(tr);
+        }
+
+        function renderingStationInfo2(station){
+                const tr = document.createElement("tr");
+                const sareaTd = document.createElement("td");
+                sareaTd.textContent = `${station.sarea}`
+                const stationNameTd = document.createElement("td");
+                stationNameTd.textContent = `${station.sna}`;
+                const infoTd = document.createElement("td"); 
+                infoTd.textContent = `${station.sbi}/${station.bemp}/${station.tot}`;
+                const mapTd = document.createElement("td");
+                const mapIcon = document.createElement("i");
+
+                mapIcon.classList.add("fa-solid", "fa-map-location-dot");
+                mapIcon.addEventListener("click", () => {
+                    map.flyTo([station.lat, station.lng], 18);
+                });
+                mapTd.append(mapIcon);
+
+                const latLngTd = document.createElement("td");
+                const latLngIcon = document.createElement ("i");
+                latLngIcon.classList.add("fa-solid","fa-circle-info");
+                latLngIcon.setAttribute("data-bs-toggle","tooltip");
+                latLngIcon.setAttribute("data-bs-title",`${station.lat},${station.lng}`) ;
+                new bootstrap.Tooltip(latLngIcon);
+                latLngTd.append(latLngIcon);
+
+                tr.append(sareaTd, stationNameTd, infoTd, mapTd, latLngTd);
+                document.querySelector(".data_rows").append(tr);
+        }
+
+
+        function fetchYoubikeData() { 
+            const taipeiYoubikeData = 
+            "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json"; //串接api
+            return fetch(taipeiYoubikeData).then((res) => res.json());
+            }
+        
+        function fetchYoubikeData2() { 
+            const newTaipeiYoubikeData = 
+            "https://data.ntpc.gov.tw/api/datasets/010E5B15-3823-4B20-B401-B1CF000550C5/json?page=0&size=1000"; //串接api
+            return fetch(newTaipeiYoubikeData).then((res) => res.json());
+            }
+    </script>
+  </body>
+</html>
